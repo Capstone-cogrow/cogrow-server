@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const crop = "사과";
+const crop = "옥수수";
 
 const getHtml = async () => {
   try {
