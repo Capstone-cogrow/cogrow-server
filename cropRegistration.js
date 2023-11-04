@@ -39,18 +39,28 @@ app.post("/crop", (req, res) => {  // 데이터 받아서 결과 전송
 
 
     if (name) {
-        db.query('SELECT * FROM croptable WHERE name = ?', [name], function(error, results, fields) { // DB에 같은 이름의 회원아이디가 있는지 확인
+        db.query('SELECT * FROM cropstable WHERE name = ?', [name], function(error, results, fields) { // DB에 같은 이름이 존재하는지 확인
             if (error) throw error;
-            if (results.length <= 0) {         // DB에 같은 이름의 회원아이디가 없고, 비밀번호가 올바르게 입력된 경우
-                db.query('INSERT INTO croptable (name, type, date, location, state) VALUES(?,?,?,?,?)', [name, type, date, location, state], function (error, data) {
+            if (results.length <= 0) {         // DB에 같은 이름이 존재하지 않는다면
+                db.query('INSERT INTO cropstable (name, type, date, location, state) VALUES(?,?,?,?,?)', [name, type, date, location, state], function (error, data) {
                 });
             } 
-            else {                                                  // DB에 같은 이름의 회원아이디가 있는 경우            
+            else {                                                  // DB에 같은 이름이 존재한다면        
                 sendData.isSuccess = "이미 존재하는 이름 입니다!"
                 res.send(sendData);  
             }            
         });        
     } 
+});
+
+app.get("/crop", (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    
+    const sqlQuery = "SELECT * FROM cropstable";
+
+    db.query(sqlQuery, (err, result) => {
+        res.send(result);
+    });
 });
 
 app.listen(port, () => {
